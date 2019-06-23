@@ -4,6 +4,11 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
+
+/// <summary>
+/// this script handles the connection to the master Photon server 
+/// and lets the player to join a room to begin a match
+/// </summary>
 public class PhotonLobby : MonoBehaviourPunCallbacks
 {
     public static PhotonLobby lobby;
