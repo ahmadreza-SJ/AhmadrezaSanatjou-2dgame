@@ -10,24 +10,15 @@ using Unity.Rendering;
 
 public class SinglePlayerSpawner : MonoBehaviour
 {
- 
-
-    //mesh and material referances to be rendered
-    [SerializeField] private Mesh Mesh;
-    [SerializeField] private Material CooperMaterial;
-    [SerializeField] private Material SpiderMaterial;
-
-    [SerializeField] private int Level;
 
 
-    // count of spiders can be entered depend on the level
-    public int SpiderCount;
-    
+   
+
 
 
     void Start()
     {
-       
+
 
         // get the world's entity manager and creates and initialize the entities of Cooper and spiders 
         var entityManager = World.Active.EntityManager;
@@ -50,18 +41,31 @@ public class SinglePlayerSpawner : MonoBehaviour
             typeof(RenderMesh),
             typeof(LocalToWorld),
             typeof(Translation),
-            typeof(CooperTag)
-            
+            typeof(CooperTag),
+            typeof(TotalShotCount),
+            typeof(LoadedShotCount),
+            typeof(CharacterTag),
+            typeof(Heart),
+            typeof(SinglePlayerTag)
             );
 
         //Set Cooper's Mesh and Sprite to be rendered
         eManager.SetSharedComponentData(CooperEntity, new RenderMesh
         {
-            mesh = Mesh,
-            material = CooperMaterial
+            mesh = GameDetails.GD.Mesh,
+            material = GameDetails.GD.CooperMaterial
         });
 
+        eManager.SetComponentData(CooperEntity, new TotalShotCount
+        {
+            Value = CooperGamePlayController.Controller.TotalShotsAtStart,
+        });
 
+        eManager.SetComponentData(CooperEntity, new LoadedShotCount
+        {
+            Count = CooperGamePlayController.Controller.ShotCountPerLoad,
+            TimeToNextShoot = 0,
+        });
 
         //set Cooper's position
         float3 position = transform.TransformPoint(new float3(0, -GameDetails.GD.CameraHalfHeight + 1, 0));
@@ -69,6 +73,16 @@ public class SinglePlayerSpawner : MonoBehaviour
         eManager.SetComponentData(CooperEntity, new Translation
         {
             Value = position
+        });
+
+        eManager.SetComponentData(CooperEntity, new CharacterTag
+        {
+            Value = ChTags.Cooper
+        });
+
+        eManager.SetComponentData(CooperEntity, new Heart
+        {
+            Value = CooperGamePlayController.Controller.Heart
         });
 
     }
@@ -84,25 +98,46 @@ public class SinglePlayerSpawner : MonoBehaviour
         //the format of save position in this set is like: for point (x, y) the saved value is x * 100 + y, so each point is going to have 
         //a unique saved value
         HashSet<int> filledPositions = new HashSet<int>();
-        
 
-       for (int i = 0; i < SpiderCount; i++)
-       {
+
+        for (int i = 0; i < GameDetails.GD.SpiderCount; i++)
+        {
             //creates the entity for each spider and declares the type of components wich it contains 
             Entity SpiderEntity = eManager.CreateEntity(
             typeof(RenderMesh),
             typeof(LocalToWorld),
             typeof(Translation),
-            typeof(SpiderTag)
-            
+            typeof(SpiderTag),
+            typeof(LoadedShotCount),
+            typeof(CharacterTag),
+            typeof(Heart),
+            typeof(SinglePlayerTag)
+
             );
 
             //specifies the spider level by attaching the level tag component to it
-            
-            switch(Level)
+
+            switch (GameDetails.GD.Level)
             {
-                case 1: eManager.AddComponent(SpiderEntity, typeof(Level1Tag));break;
-                default: Debug.LogError("Invalid Level");break;
+                case 1: eManager.AddComponent(SpiderEntity, typeof(Level1Tag)); break;
+                case 2:
+                    {
+                        eManager.AddComponent(SpiderEntity, typeof(Level2Tag));
+                        eManager.AddComponent(SpiderEntity, typeof(Destination));
+                        
+                        GameDetails gd = GameDetails.GD;
+
+                        eManager.SetComponentData(SpiderEntity, new Destination
+                        {
+                            X = UnityEngine.Random.Range(-(gd.CameraHalfWidth - gd.HorizontalBoundary), (gd.CameraHalfWidth - gd.HorizontalBoundary)),
+                            Y = UnityEngine.Random.Range(gd.VerticalBoundary, (gd.CameraHalfHeight - gd.VerticalBoundary))
+
+                        });
+                        
+
+                        break;
+                    }
+                default: Debug.LogError("Invalid Level"); break;
             }
 
 
@@ -123,8 +158,8 @@ public class SinglePlayerSpawner : MonoBehaviour
             //Set spider's Mesh and Sprite to be rendered
             eManager.SetSharedComponentData(SpiderEntity, new RenderMesh
             {
-                mesh = Mesh,
-                material = SpiderMaterial
+                mesh = GameDetails.GD.Mesh,
+                material = GameDetails.GD.SpiderMaterial
             });
 
             //set spider's position
@@ -135,9 +170,29 @@ public class SinglePlayerSpawner : MonoBehaviour
             {
                 Value = position
             });
+
+            eManager.SetComponentData(SpiderEntity, new LoadedShotCount
+            {
+                Count = 1000,
+                TimeToNextShoot = UnityEngine.Random.Range(0, SpiderGamePlayController.Controller.ShootingDelay)
+                
+            });
+
+            eManager.SetComponentData(SpiderEntity, new CharacterTag
+            {
+                Value = ChTags.Spider
+
+            });
+
+            eManager.SetComponentData(SpiderEntity, new Heart
+            {
+                Value = SpiderGamePlayController.Controller.Heart
+
+            });
+
         }
     }
 
-    
-    
+
+
 }

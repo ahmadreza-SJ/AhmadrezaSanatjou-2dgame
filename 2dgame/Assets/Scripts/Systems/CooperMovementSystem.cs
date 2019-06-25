@@ -21,33 +21,22 @@ public enum MoveDirectionsVertical
 
 public class CooperMovementSystem : JobComponentSystem
 {
-
-    EntityCommandBufferSystem m_Barrier;
-
-    protected override void OnCreate()
-    {
-        m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
-    }
-
     [BurstCompile]
-    struct CooperMovementJob : IJobForEach<Translation, CooperTag>
+    struct CooperMovementJob : IJobForEach<Translation, CooperTag, SinglePlayerTag>
     {
-        [WriteOnly]
-        public EntityCommandBuffer.Concurrent CommandBuffer;
 
         public float DeltaTime;
         public float HorizontalMove;
         public float VerticalMove;
-        public void Execute(ref Translation position, [ReadOnly] ref CooperTag tag)
+        public void Execute(ref Translation position, [ReadOnly] ref CooperTag tag, [ReadOnly] ref SinglePlayerTag single)
         {
             if((position.Value.x > GameDetails.GD.CameraHalfWidth - GameDetails.GD.HorizontalBoundary && HorizontalMove > 0)
                 || (position.Value.x < -GameDetails.GD.CameraHalfWidth + GameDetails.GD.HorizontalBoundary && HorizontalMove < 0))
             {
                 HorizontalMove = 0;
             }
-            if((position.Value.y > 0 && VerticalMove > 0) 
-                || (position.Value.y < -GameDetails.GD.CameraHalfHeight + GameDetails.GD.VerticalBoundary && VerticalMove > 0))
+            if((position.Value.y > -GameDetails.GD.VerticalBoundary && VerticalMove > 0) 
+                || (position.Value.y < -GameDetails.GD.CameraHalfHeight + GameDetails.GD.VerticalBoundary && VerticalMove < 0))
             {
                 VerticalMove = 0;
             }
@@ -63,7 +52,6 @@ public class CooperMovementSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
-        var commandBuffer = m_Barrier.CreateCommandBuffer().ToConcurrent();
 
         float horizontal = 0;
         float vertical = 0;
@@ -88,14 +76,12 @@ public class CooperMovementSystem : JobComponentSystem
         var job = new CooperMovementJob
         {
             
-            CommandBuffer = commandBuffer,
             DeltaTime = Time.deltaTime,
             HorizontalMove = horizontal,
             VerticalMove = vertical,
         }.Schedule(this, inputDependencies);
 
-
-        m_Barrier.AddJobHandleForProducer(job);
+        
 
         return job;
     }

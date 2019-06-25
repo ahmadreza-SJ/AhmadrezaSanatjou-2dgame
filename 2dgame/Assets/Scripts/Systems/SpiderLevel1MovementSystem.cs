@@ -8,19 +8,11 @@ using UnityEngine;
 
 public class SpiderLevel1MovementSystem : JobComponentSystem
 {
-    EntityCommandBufferSystem m_Barrier;
-
-    protected override void OnCreate()
-    {
-        m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
-    }
 
     [BurstCompile]
     struct SpiderLevel1MovementJob : IJobForEach<Translation, SpiderTag, Level1Tag>
     {
-        [WriteOnly]
-        public EntityCommandBuffer.Concurrent CommandBuffer;
+       
 
         public float DeltaTime;
         public float HorizontalMove;
@@ -29,11 +21,11 @@ public class SpiderLevel1MovementSystem : JobComponentSystem
         public void Execute(ref Translation position, [ReadOnly] ref SpiderTag tag, [ReadOnly] ref Level1Tag levelTag)
         {
             if ((position.Value.x > GameDetails.GD.CameraHalfWidth - GameDetails.GD.HorizontalBoundary 
-                && SpiderGamePlayController.Controller.HorizontalSpeed > 0)
+                && SpiderGamePlayController.Controller.Speed > 0)
                 || (position.Value.x < -GameDetails.GD.CameraHalfWidth + GameDetails.GD.HorizontalBoundary
-                && SpiderGamePlayController.Controller.HorizontalSpeed < 0))
+                && SpiderGamePlayController.Controller.Speed < 0))
             {
-                SpiderGamePlayController.Controller.HorizontalSpeed *= -1;
+                SpiderGamePlayController.Controller.Speed *= -1;
             }
            
             position = new Translation
@@ -45,19 +37,18 @@ public class SpiderLevel1MovementSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
-        var commandBuffer = m_Barrier.CreateCommandBuffer().ToConcurrent();
+        JobHandle job = new JobHandle();
+        if (SpiderGamePlayController.Controller == null)
+        {
+            return job;
+        }
 
-
-
-        var job = new SpiderLevel1MovementJob
+        job = new SpiderLevel1MovementJob
         {
             DeltaTime = Time.deltaTime,
-            HorizontalMove = SpiderGamePlayController.Controller.HorizontalSpeed
+            HorizontalMove = SpiderGamePlayController.Controller.Speed      
         }.Schedule(this, inputDependencies);
-
-
-        m_Barrier.AddJobHandleForProducer(job);
-
+        
         return job;
     }
 }

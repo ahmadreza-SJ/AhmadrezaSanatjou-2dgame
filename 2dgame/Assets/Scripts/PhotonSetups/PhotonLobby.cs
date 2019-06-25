@@ -16,6 +16,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public GameObject JoinMatchBtn;
     public GameObject CancelBtn;
+    public GameObject BackBtn;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings(); // connects to master photon server
+        
     }
 
 
@@ -46,6 +48,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         JoinMatchBtn.SetActive(false);
         CancelBtn.SetActive(true);
         PhotonNetwork.JoinRandomRoom(); // trying to join a random room
+        BackBtn.SetActive(false);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -76,6 +79,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     {
         CancelBtn.SetActive(false);
         JoinMatchBtn.SetActive(true);
+        BackBtn.SetActive(true);
         PhotonNetwork.LeaveRoom();
         Debug.Log("Left the room");
     }
