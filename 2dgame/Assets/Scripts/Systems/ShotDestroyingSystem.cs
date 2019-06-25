@@ -22,7 +22,7 @@ public class ShotDestroyingSystem : JobComponentSystem
 
     }
 
-    [BurstCompile]
+    
     struct ShotDestroyingJob : IJobForEachWithEntity<Translation, ShotTag>
     {
         [WriteOnly]
@@ -43,6 +43,7 @@ public class ShotDestroyingSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
+        
 
         var commandBuffer = m_Barrier.CreateCommandBuffer().ToConcurrent();
 

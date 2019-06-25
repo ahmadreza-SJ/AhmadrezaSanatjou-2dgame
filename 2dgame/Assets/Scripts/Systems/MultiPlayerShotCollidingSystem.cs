@@ -24,7 +24,7 @@ public class MultiPlayerShotCollidingSystem : JobComponentSystem
         m_Group = GetEntityQuery(typeof(ShotTag), ComponentType.ReadOnly<Translation>());
     }
 
-    [BurstCompile]
+  
     struct MPShotCollidingJob : IJobForEachWithEntity<Translation, CharacterTag, Heart, PhotonViewData>
     {
         [WriteOnly]
@@ -74,6 +74,8 @@ public class MultiPlayerShotCollidingSystem : JobComponentSystem
     {
 
         JobHandle job = new JobHandle();
+
+
 
         var commandBuffer = m_Barrier.CreateCommandBuffer().ToConcurrent();
 

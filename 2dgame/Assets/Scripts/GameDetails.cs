@@ -57,7 +57,7 @@ public class GameDetails : MonoBehaviour
     public int KilledSpidersCount;
 
     // this set is used to find the shot which collides a spider. because it's inaccessible from the inside of shotCollidingJob
-    public HashSet<int> DestroyedShotsIndexes = new HashSet<int>();
+    public HashSet<int> DestroyedShotsIndexes = new HashSet<int>()  ;
 
     public static GameDetails GD;
 
@@ -71,8 +71,8 @@ public class GameDetails : MonoBehaviour
         {
             GD = this;
         }
-
-        if(IsMultiPlayer)
+        
+        if (IsMultiPlayer)
         {
             PV = gameObject.AddComponent<PhotonView>();
         }

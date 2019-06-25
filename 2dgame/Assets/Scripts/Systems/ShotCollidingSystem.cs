@@ -26,7 +26,8 @@ public class ShotCollidingSystem : JobComponentSystem
 
 
     }
-    [BurstCompile]
+   
+
     struct ShotCollidingJob : IJobForEachWithEntity<Translation, CharacterTag, Heart, SinglePlayerTag>
     {
         [WriteOnly]

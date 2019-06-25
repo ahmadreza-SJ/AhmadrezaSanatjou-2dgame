@@ -15,8 +15,7 @@ public class CoinMovementSystem : JobComponentSystem
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
 
-
-    [BurstCompile]
+    
     struct CoinMovementJob : IJobForEachWithEntity<Translation, CoinTag>
     {
         [WriteOnly]

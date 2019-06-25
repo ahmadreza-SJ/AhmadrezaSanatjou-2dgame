@@ -18,8 +18,8 @@ public class SpiderShootingSystem : JobComponentSystem
     {
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
+    
 
-    [BurstCompile]
     struct SpiderShootingJob : IJobForEachWithEntity<Translation, SpiderTag, LoadedShotCount>
     {
         [WriteOnly]

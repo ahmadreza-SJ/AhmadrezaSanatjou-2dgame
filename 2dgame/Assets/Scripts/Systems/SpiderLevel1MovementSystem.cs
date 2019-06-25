@@ -8,8 +8,8 @@ using UnityEngine;
 
 public class SpiderLevel1MovementSystem : JobComponentSystem
 {
+    
 
-    [BurstCompile]
     struct SpiderLevel1MovementJob : IJobForEach<Translation, SpiderTag, Level1Tag>
     {
        

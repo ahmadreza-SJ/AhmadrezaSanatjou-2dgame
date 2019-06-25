@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class MultiPlayerMovementSystem : JobComponentSystem
 {
-    [BurstCompile]
+
     struct MultiplayerMovementJob : IJobForEach<Translation, CharacterTag, PhotonViewData>
     {
 

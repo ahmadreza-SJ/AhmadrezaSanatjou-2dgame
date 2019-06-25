@@ -21,7 +21,7 @@ public enum MoveDirectionsVertical
 
 public class CooperMovementSystem : JobComponentSystem
 {
-    [BurstCompile]
+
     struct CooperMovementJob : IJobForEach<Translation, CooperTag, SinglePlayerTag>
     {
 

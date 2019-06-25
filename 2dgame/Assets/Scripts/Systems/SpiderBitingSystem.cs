@@ -23,8 +23,7 @@ public class SpiderBitingSystem : JobComponentSystem
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         m_Group = GetEntityQuery(typeof(CooperTag), ComponentType.ReadOnly<Translation>());
     }
-
-    [BurstCompile]
+    
     struct ShotCollidingJob : IJobForEachWithEntity<Translation, SpiderTag, Level2Tag>
     {
         [WriteOnly]

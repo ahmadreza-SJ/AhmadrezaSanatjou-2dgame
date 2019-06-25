@@ -19,8 +19,8 @@ public class ShotMovementSystem : JobComponentSystem
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
 
+    
 
-    [BurstCompile]
     struct ShotMovementJob : IJobForEachWithEntity<Translation, ShotTag>
     {
         [WriteOnly]

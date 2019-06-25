@@ -17,8 +17,8 @@ public class MultiplayerRemoteDamagingSystem : JobComponentSystem
     {
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
+    
 
-    [BurstCompile]
     struct RemoteDamageJob : IJobForEachWithEntity<Translation, ShotTag>
     {
         [WriteOnly]

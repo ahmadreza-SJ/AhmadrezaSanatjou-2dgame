@@ -10,8 +10,8 @@ using System;
 public class SpiderLevel2MovementSystem : JobComponentSystem
 {
 
+    
 
-    [BurstCompile]
     struct SpiderLevel1MovementJob : IJobForEach<Translation, SpiderTag, Level2Tag, Destination>
     {
 

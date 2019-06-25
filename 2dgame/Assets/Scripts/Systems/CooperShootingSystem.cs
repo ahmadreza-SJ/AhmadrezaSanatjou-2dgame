@@ -18,8 +18,8 @@ public class CooperShootingSystem : JobComponentSystem
     {
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
+    
 
-    [BurstCompile]
     struct CooperShootingJob : IJobForEachWithEntity<Translation, CooperTag, LoadedShotCount, TotalShotCount>
     {
 

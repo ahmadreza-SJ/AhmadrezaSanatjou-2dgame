@@ -10,7 +10,7 @@ using UnityEngine;
 //this system casts the remote client information from it's object and debloy them in the related entity
 public class InformationCasterSystem : JobComponentSystem
 {
-    [BurstCompile]
+
     struct CooperMovementJob : IJobForEach<Translation, CharacterTag, PhotonViewData>
     {
 

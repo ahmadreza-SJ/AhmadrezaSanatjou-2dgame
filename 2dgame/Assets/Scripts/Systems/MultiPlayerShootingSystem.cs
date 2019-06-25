@@ -18,8 +18,8 @@ public class MultiPlayerShootingSystem : JobComponentSystem
     {
         m_Barrier = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
+    
 
-    [BurstCompile]
     struct MultiplayerShootingJob : IJobForEachWithEntity<Translation, CharacterTag, LoadedShotCount, PhotonViewData>
     {
 
