@@ -167,10 +167,8 @@ public class GameDetails : MonoBehaviour
 
     public void GameOver()
     {
-        NativeArray < Entity > all = World.Active.EntityManager.GetAllEntities();
-        World.Active.EntityManager.DestroyEntity(all);
-
-
+        DestroyAll();
+        SceneManager.LoadScene("MainMenu");
         Debug.Log("Game Over!");
     }
 
@@ -201,7 +199,7 @@ public class GameDetails : MonoBehaviour
 
     public void ScoreSetText(int HeartCount)
     {
-        ScoreText.text = "Hearts : " + HeartCount;
+        ScoreText.text = "Score : " + HeartCount;
     }
 
     
